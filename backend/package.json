@@ -1,0 +1,25 @@
+{
+  "name": "adopta-un-michi",
+  "version": "0.1.0",
+  "description": "Proyecto de Desarrollo Web 2023-2S, Grupo 5",
+  "contributors": [
+    { "name": "Carlos Daniel Sanchez" },
+    { "name": "Dioselin Esteban Brito" },
+    { "name": "Jonathan David Avendaño" },
+    { "name": "Javier De Jesús Silva" }
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ErunamoJAZZ/web2023-adopta-un-michi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ErunamoJAZZ/web2023-adopta-un-michi/issues"
+  },
+  "homepage": "https://github.com/ErunamoJAZZ/web2023-adopta-un-michi#readme"
+}
