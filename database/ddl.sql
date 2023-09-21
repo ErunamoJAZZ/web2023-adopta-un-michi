@@ -61,7 +61,7 @@ CREATE TABLE michis."user" (
   last_name varchar(50) NOT NULL,
   email text NOT NULL,
   "password" text NOT NULL,
-  "user_type" public."user_type" NULL,
+  "user_type" michis."user_type" NOT NULL,
   birth_day date NULL,
   is_active bool NOT NULL DEFAULT true,
   created_at timestamptz NOT NULL DEFAULT now(),
