@@ -1,7 +1,8 @@
+// Brito
 export default function Home() {
   return (
     <main>
-      Holi
+      Admin Adoptions
     </main>
   );
 }
