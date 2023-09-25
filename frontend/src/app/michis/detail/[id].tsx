@@ -1,7 +1,8 @@
+// Jona
 export default function Home() {
   return (
     <main>
-      Holi
+      Michi detail
     </main>
   );
 }

@@ -1,7 +1,8 @@
+// Carlos
 export default function Home() {
   return (
     <main>
-      Holi
+      Login/register/chamge password
     </main>
   );
 }
