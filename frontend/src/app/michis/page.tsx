@@ -18,22 +18,45 @@ interface Cat {
   updated_at: string | null;
 }
 
-const cardActionsStyles = {
+const michisInventoryStyles = {
   display: 'flex',
+  '& .filterList': {
+    position: 'sticky',
+    top: '8px',
+    marginTop: {
+      xs: '1rem',
+      sm: '1rem',
+      md: '0',
+    },
+  },
+  flexDirection: {
+    xs: 'column',
+    sm: 'column',
+    md: 'row',
+  },
+  alignItems: {
+    xs: 'center',
+    sm: 'center',
+    md: 'flex-start',
+  },
+  '& .michisList': {
+    display: 'flex',
+    listStyle: 'none',
+    flexWrap: 'wrap',
+    gap: '1rem',
+    justifyContent: 'center',
+    padding: 0,
+  },
 };
 
 export default function Michis() {
   return (
     <main>
-      <Box sx={cardActionsStyles}>
-        <FilterList />
-        <ul style={{
-          listStyle: 'none',
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '1rem',
-        }}
-        >
+      <Box sx={michisInventoryStyles}>
+        <Box className="filterList">
+          <FilterList />
+        </Box>
+        <ul className="michisList">
           {cats.cats.map((cat: Cat) => (
             <li key={cat.id}>
               <MichiCard

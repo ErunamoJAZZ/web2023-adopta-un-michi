@@ -1,7 +1,7 @@
 const cats = {
   cats: [
     {
-      id: 1,
+      id: 101,
       name: 'Whiskers',
       description: 'A fluffy orange tabby cat.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -14,7 +14,7 @@ const cats = {
       updated_at: null,
     },
     {
-      id: 2,
+      id: 102,
       name: 'Luna',
       description: 'A sleek black cat with green eyes.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -27,7 +27,7 @@ const cats = {
       updated_at: '2023-04-05T09:15:00Z',
     },
     {
-      id: 3,
+      id: 103,
       name: 'Oscar',
       description: 'A chubby gray cat with a playful spirit.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -40,7 +40,7 @@ const cats = {
       updated_at: null,
     },
     {
-      id: 4,
+      id: 104,
       name: 'Mittens',
       description: 'A fluffy white cat with blue eyes.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -53,7 +53,7 @@ const cats = {
       updated_at: null,
     },
     {
-      id: 5,
+      id: 105,
       name: 'Leo',
       description: 'A sleek and agile brown tabby cat.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -66,7 +66,7 @@ const cats = {
       updated_at: null,
     },
     {
-      id: 6,
+      id: 106,
       name: 'Bella',
       description: 'A graceful Siamese cat with blue almond-shaped eyes.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -79,7 +79,7 @@ const cats = {
       updated_at: null,
     },
     {
-      id: 7,
+      id: 107,
       name: 'Max',
       description: 'A playful and mischievous orange tabby kitten.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -92,7 +92,7 @@ const cats = {
       updated_at: null,
     },
     {
-      id: 8,
+      id: 108,
       name: 'Cleo',
       description: 'A fluffy Maine Coon cat with a majestic appearance.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -105,7 +105,7 @@ const cats = {
       updated_at: null,
     },
     {
-      id: 9,
+      id: 109,
       name: 'Simba',
       description: 'A regal Bengal cat with striking spotted fur.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -118,7 +118,7 @@ const cats = {
       updated_at: null,
     },
     {
-      id: 10,
+      id: 110,
       name: 'Misty',
       description: 'A mysterious gray cat with emerald green eyes.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -131,7 +131,7 @@ const cats = {
       updated_at: null,
     },
     {
-      id: 11,
+      id: 111,
       name: 'Oliver',
       description: 'A handsome tuxedo cat with a friendly disposition.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -144,7 +144,7 @@ const cats = {
       updated_at: null,
     },
     {
-      id: 12,
+      id: 112,
       name: 'Mocha',
       description: 'A sweet chocolate-point Siamese cat with striking blue eyes.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -157,7 +157,7 @@ const cats = {
       updated_at: null,
     },
     {
-      id: 13,
+      id: 113,
       name: 'Tiger',
       description: 'A strong and athletic striped Bengal cat.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -170,7 +170,7 @@ const cats = {
       updated_at: null,
     },
     {
-      id: 14,
+      id: 114,
       name: 'Lola',
       description: 'A graceful calico cat with a playful nature.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
@@ -183,7 +183,7 @@ const cats = {
       updated_at: null,
     },
     {
-      id: 15,
+      id: 115,
       name: 'Rocky',
       description: 'A rugged tabby cat with a love for the outdoors.',
       image_url: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg',
