@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Avatar, Button, TextField, Typography } from "@mui/material"
-import { FunctionComponent as FC } from "react"
-import styles from "./profile.style.module.css"
+import { useState } from 'react'
+import { Avatar, Button, TextField, Typography } from '@mui/material'
+import { FunctionComponent as FC } from 'react'
+import styles from './profile.style.module.css'
 
 export interface ProfileProps
 {
@@ -19,8 +19,8 @@ export const Perfil: FC<ProfileProps> = (profile_info: ProfileProps) =>
         <>
         <div style={{position:"absolute", left:"42%", top:"15%"}}>
             <Avatar sx={{width: 150, height:150, fontSize:40, textAlign:"justify", left:"20%"}}
-            children={`${profile_info.nombre.split(" ")[0][0].toUpperCase()}
-            ${profile_info.nombre.split(" ")[1][0].toUpperCase()}`}/>
+            children={`${profile_info.nombre.split(' ')[0][0].toUpperCase()}
+            ${profile_info.nombre.split(' ')[1][0].toUpperCase()}`}/>
             {isEditing ? (
                 <>
                 <div>
