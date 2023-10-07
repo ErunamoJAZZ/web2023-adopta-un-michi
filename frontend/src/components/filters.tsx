@@ -7,14 +7,22 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
-import { Box, Button, Typography } from '@mui/material';
+import {
+  Box, Button, Drawer, Typography,
+} from '@mui/material';
+
+const drawerWidth = 240;
 
 const FilterStyles = {
-  '& .michisList': {
-    display: {
-      xs: 'none',
-      md: 'block',
+  width: { sm: `calc(100% - ${drawerWidth}px)` },
+  '& .MuiDrawer-paper': {
+    position: {
+      xs: 'fixed',
+      sm: 'fixed',
+      md: 'sticky',
     },
+  },
+  '& .michisList': {
     width: '100%',
     maxWidth: 220,
     height: '98vh',
@@ -23,12 +31,6 @@ const FilterStyles = {
       padding: '4px 16px',
       color: '#777',
       textTransform: 'capitalize',
-    },
-  },
-  '& .toggleFilterButton': {
-    display: {
-      xs: 'block',
-      md: 'none',
     },
   },
 };
@@ -103,9 +105,14 @@ const filters = [
 ];
 
 export default function FilterList() {
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [checked, setChecked] = useState<number[]>([]);
 
-  const handleToggle = (value: number) => () => {
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const handleCheckboxToggle = (value: number) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -118,42 +125,93 @@ export default function FilterList() {
     setChecked(newChecked);
   };
 
-  return (
-    <Box sx={FilterStyles}>
-      <Button variant="outlined" className="toggleFilterButton">
-        Outlined
-      </Button>
-      <List className="michisList" dense>
-        {filters.map((filter) => (
-          <>
+  const MichisList = (
+    <List className="michisList" dense>
+      {filters.map((filter) => (
+        <>
+          <ListItem
+            key={filter.id}
+            className="categoryLabel"
+            disablePadding
+          >
+            <Typography component="p">{filter.category}</Typography>
+          </ListItem>
+          {filter.items.map((filterOptions) => (
             <ListItem
-              key={filter.id}
-              className="categoryLabel"
+              key={filterOptions.id}
               disablePadding
             >
-              <Typography component="p">{filter.category}</Typography>
-            </ListItem>
-            {filter.items.map((filterOptions) => (
-              <ListItem
-                key={filterOptions.id}
-                disablePadding
+              <ListItemButton
+                role={undefined}
+                onClick={handleCheckboxToggle(filterOptions.id)}
+                dense
               >
-                <ListItemButton role={undefined} onClick={handleToggle(filterOptions.id)} dense>
-                  <ListItemIcon>
-                    <Checkbox
-                      edge="start"
-                      checked={checked.indexOf(filterOptions.id) !== -1}
-                      tabIndex={-1}
-                      disableRipple
-                    />
-                  </ListItemIcon>
-                  <ListItemText id={`checkbox-list-label-${filterOptions.id}`} primary={filterOptions.label} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </>
-        ))}
-      </List>
+                <ListItemIcon>
+                  <Checkbox
+                    edge="start"
+                    checked={checked.indexOf(filterOptions.id) !== -1}
+                    tabIndex={-1}
+                    disableRipple
+                  />
+                </ListItemIcon>
+                <ListItemText id={`checkbox-list-label-${filterOptions.id}`} primary={filterOptions.label} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </>
+      ))}
+    </List>
+  );
+
+  return (
+    <Box sx={FilterStyles}>
+
+      <Button
+        onClick={handleDrawerToggle}
+        sx={{ mr: 2, display: { md: 'none' } }}
+        variant="contained"
+        className="toggleFilterButton"
+      >
+        Filtros
+      </Button>
+      <Drawer
+        anchor="top"
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          display: { xs: 'fixed', sm: 'fixed', md: 'none' },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: { xs: '60%', sm: '40%' },
+            left: { xs: '20%', sm: '30%' },
+            padding: '0 1rem 0.5rem ',
+          },
+        }}
+      >
+        {MichisList}
+        <Button
+          variant="outlined"
+          onClick={handleDrawerToggle}
+        >
+          Aplicar filtros
+        </Button>
+      </Drawer>
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: 'none', sm: 'none', md: 'block' },
+          width: drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box' },
+        }}
+        open
+      >
+        {MichisList}
+      </Drawer>
     </Box>
   );
 }
