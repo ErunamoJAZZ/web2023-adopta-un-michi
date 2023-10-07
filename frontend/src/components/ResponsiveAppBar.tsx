@@ -15,7 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
 const pages = ['Admin', 'Michis', 'Donations'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Login'];
 const projectName = 'Adopta UN michi';
 
 function ResponsiveAppBar() {
