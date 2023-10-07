@@ -1,8 +1,9 @@
-import { Box, Typography, Button, Container } from '@mui/material';
+import {
+  Box, Typography, Button, Container,
+} from '@mui/material';
 import Link from 'next/link';
 
 export default function HomePage() {
-
   return (
     <Container maxWidth="sm">
       <Box
@@ -11,7 +12,7 @@ export default function HomePage() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
         <Typography variant="h4" gutterBottom>
