@@ -27,6 +27,8 @@ const FilterStyles = {
     maxWidth: 220,
     height: '98vh',
     bgcolor: 'background.paper',
+    display: 'flex',
+    justifyContent: 'flex-start',
     '& .categoryLabel': {
       padding: '4px 16px',
       color: '#777',
@@ -128,9 +130,8 @@ export default function FilterList() {
   const MichisList = (
     <List className="michisList" dense>
       {filters.map((filter) => (
-        <>
+        <Box key={filter.id}>
           <ListItem
-            key={filter.id}
             className="categoryLabel"
             disablePadding
           >
@@ -158,7 +159,7 @@ export default function FilterList() {
               </ListItemButton>
             </ListItem>
           ))}
-        </>
+        </Box>
       ))}
     </List>
   );
