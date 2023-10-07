@@ -10,21 +10,20 @@ import {
   Grid,
 } from '@mui/material';
 
-const Login = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      // Agrega aquí la lógica de autenticación
+      // Agrega aquí la lógica para enviar las instrucciones de recuperación de contraseña
 
-      alert('Inicio de Sesión Exitoso');
-      // Redirige al usuario a la página de inicio o a otra página
+      alert('Instrucciones de recuperación de contraseña enviadas al correo electrónico: ' + email);
+      // Redirige al usuario a la página de confirmación o a donde sea necesario
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      alert('Credenciales incorrectas');
+      console.error('Error al enviar las instrucciones de recuperación de contraseña:', error);
+      alert('Error al enviar las instrucciones de recuperación de contraseña');
     }
   };
 
@@ -32,7 +31,7 @@ const Login = () => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div>
-        <Typography variant="h5">Iniciar Sesión</Typography>
+        <Typography variant="h5">Recuperar Contraseña</Typography>
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
@@ -42,15 +41,6 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <TextField
-            fullWidth
-            label="Contraseña"
-            type="password"
-            variant="outlined"
-            margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
           <Button
             type="submit"
             fullWidth
@@ -58,7 +48,7 @@ const Login = () => {
             color="primary"
             sx={{ mt: 2 }}
           >
-            Iniciar Sesión
+            Enviar Instrucciones
           </Button>
         </form>
       </div>
@@ -66,4 +56,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;
