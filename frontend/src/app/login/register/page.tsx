@@ -1,6 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  CssBaseline,
+  Grid,
+} from '@mui/material';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -12,70 +20,73 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, lastName, email, password }),
-      });
+      // Agrega aquí la lógica para registrar al usuario
 
-      if (response.status === 201) {
-        const data = await response.json();
-        alert('Registro exitoso. ID de usuario: ' + data.userId);
-        // Redireccionar al usuario a la página de inicio de sesión u otra página
-      } else {
-        const errorData = await response.json();
-        alert('Error al registrar: ' + errorData.message);
-      }
+      alert('Registro exitoso');
+      // Redirige al usuario a la página de inicio de sesión u otra página
     } catch (error) {
       console.error('Error al registrar:', error);
+      alert('Error al registrar');
     }
   };
 
   return (
-    <div>
-      <h1>Registro</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Nombre</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="lastName">Apellido</label>
-          <input
-            type="text"
-            id="lastName"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Correo Electrónico</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit">Registrarse</button>
-      </form>
-    </div>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div>
+        <Typography variant="h5">Registro</Typography>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Nombre"
+                variant="outlined"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Apellido"
+                variant="outlined"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Correo Electrónico"
+                variant="outlined"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Contraseña"
+                type="password"
+                variant="outlined"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+          >
+            Registrarse
+          </Button>
+        </form>
+      </div>
+    </Container>
   );
 };
 

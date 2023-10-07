@@ -1,6 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  CssBaseline,
+} from '@mui/material';
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
@@ -15,8 +23,7 @@ const ResetPassword = () => {
     }
 
     try {
-      // Aquí debes agregar la lógica para cambiar la contraseña del usuario
-      // Esto puede implicar actualizar la contraseña en la base de datos.
+      // Agrega aquí la lógica para cambiar la contraseña del usuario
 
       alert('Contraseña cambiada exitosamente');
       // Redirige al usuario a la página de inicio de sesión u otra página
@@ -27,30 +34,45 @@ const ResetPassword = () => {
   };
 
   return (
-    <div>
-      <h1>Cambiar Contraseña</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="password">Nueva Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="confirmPassword">Confirmar Contraseña</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit">Cambiar Contraseña</button>
-      </form>
-    </div>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div>
+        <Typography variant="h5">Cambiar Contraseña</Typography>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Nueva Contraseña"
+                type="password"
+                variant="outlined"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Confirmar Contraseña"
+                type="password"
+                variant="outlined"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+          >
+            Cambiar Contraseña
+          </Button>
+        </form>
+      </div>
+    </Container>
   );
 };
 

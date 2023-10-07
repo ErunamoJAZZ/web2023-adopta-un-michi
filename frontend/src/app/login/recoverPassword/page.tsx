@@ -1,6 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  CssBaseline,
+  Grid,
+} from '@mui/material';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -9,11 +17,10 @@ const ForgotPassword = () => {
     e.preventDefault();
 
     try {
-      // Aquí puedes agregar la lógica para enviar un correo de recuperación de contraseña al usuario
-      // Esto puede implicar la generación de un token único y su envío por correo electrónico.
+      // Agrega aquí la lógica para enviar las instrucciones de recuperación de contraseña
 
       alert('Instrucciones de recuperación de contraseña enviadas al correo electrónico: ' + email);
-      // Redirige al usuario a una página de confirmación o a donde sea necesario
+      // Redirige al usuario a la página de confirmación o a donde sea necesario
     } catch (error) {
       console.error('Error al enviar las instrucciones de recuperación de contraseña:', error);
       alert('Error al enviar las instrucciones de recuperación de contraseña');
@@ -21,21 +28,31 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div>
-      <h1>Recuperar Contraseña</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Correo Electrónico</label>
-          <input
-            type="email"
-            id="email"
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div>
+        <Typography variant="h5">Recuperar Contraseña</Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            label="Correo Electrónico"
+            variant="outlined"
+            margin="normal"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-        </div>
-        <button type="submit">Enviar Instrucciones</button>
-      </form>
-    </div>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+          >
+            Enviar Instrucciones
+          </Button>
+        </form>
+      </div>
+    </Container>
   );
 };
 
