@@ -4,19 +4,7 @@ import MichiCard from '../../components/michiCard';
 
 import cats from './mockedData';
 
-interface Cat {
-  id: number;
-  name: string;
-  description: string | null;
-  image_url: string | null;
-  age: number | null;
-  personality: string | null;
-  sex: string;
-  health_state: string;
-  is_available: boolean;
-  added_at: string;
-  updated_at: string | null;
-}
+import ICat from '../../interfaces/cat';
 
 const michisInventoryStyles = {
   display: 'flex',
@@ -57,7 +45,7 @@ export default function Michis() {
           <FilterList />
         </Box>
         <ul className="michisList">
-          {cats.cats.map((cat: Cat) => (
+          {cats.cats.map((cat: ICat) => (
             <li key={cat.id}>
               <MichiCard
                 name={cat.name}
