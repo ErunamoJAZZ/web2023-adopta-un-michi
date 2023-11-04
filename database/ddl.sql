@@ -90,7 +90,8 @@ COMMENT ON COLUMN michis."user".email IS 'user email';
 COMMENT ON COLUMN michis."user"."password_hash" IS '@omit
 user password stored using Bcrypt';
 COMMENT ON COLUMN michis."user"."user_type" IS 'User type (admin or user)';
-COMMENT ON COLUMN michis."user".birth_day IS 'To calculate the current age';
+COMMENT ON COLUMN michis."user".birth_day IS '@omit
+To calculate the current age';
 COMMENT ON COLUMN michis."user".is_active IS 'To know if this user can be active. False means banned';
 COMMENT ON COLUMN michis."user".created_at IS 'Timestamptz when user was created';
 COMMENT ON COLUMN michis."user".updated_at IS 'Timestamptz when user was updated';
@@ -142,6 +143,7 @@ COMMENT ON COLUMN michis.usercat_like.user_id IS 'Foreign key to user';
 COMMENT ON COLUMN michis.usercat_like.cat_id IS 'Foreign key to cat';
 COMMENT ON COLUMN michis.usercat_like.ts IS 'Timestamptz when this like was made';
 
+-- Type especial para el JWT de postgraphile.
 -- DROP TYPE michis.jwt_token cascade;
 CREATE TYPE michis.jwt_token AS (
   "role" text,
@@ -149,9 +151,7 @@ CREATE TYPE michis.jwt_token AS (
   is_admin bool
 );
 
-
-
-
+--Grants generales para las tablas y los usuarios.
 GRANT USAGE ON SCHEMA michis TO administrator;
 GRANT USAGE ON SCHEMA michis TO user_external;
 GRANT USAGE ON SCHEMA michis TO user_unal;
@@ -166,7 +166,7 @@ GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE michis.donation TO administrator;
 GRANT INSERT, SELECT ON TABLE michis.donation TO user_external;
 GRANT INSERT, SELECT ON TABLE michis.donation TO user_unal;
 
-GRANT SELECT, UPDATE ON TABLE michis.usercat_interest TO administrador;
+GRANT SELECT, UPDATE ON TABLE michis.usercat_interest TO administrator;
 GRANT INSERT, SELECT, UPDATE ON TABLE michis.usercat_interest TO user_unal;
 
 GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE michis.usercat_like TO user_unal;
@@ -174,23 +174,28 @@ GRANT SELECT ON TABLE michis.usercat_like TO user_external;
 GRANT SELECT, UPDATE, DELETE ON TABLE michis.usercat_like TO administrator;
 
 
+-- Funciones auxiliares
+create function michis.current_user_id() returns integer as $$
+  select nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+$$ language sql stable;
 
+create function michis.current_user_role() returns text as $$
+  select nullif(current_setting('jwt.claims.role', true), '')::text;
+$$ language sql stable;
+
+
+-- Row Level Security
 ALTER TABLE michis."user" ENABLE ROW LEVEL SECURITY;
 
+-- Política para que un usuario solo pueda modificarse a sí mismo.
 CREATE POLICY own_user ON michis."user"
   AS PERMISSIVE
   FOR UPDATE
   USING ((id = michis.current_user_id()))
   WITH CHECK ((id = michis.current_user_id()));
 
+-- Política para que cualquier usuario pueda consultar a los demás.
 CREATE POLICY any_select_user ON michis."user"
   AS PERMISSIVE
   FOR SELECT
   USING (true);
-
-
-
--- GRANT USAGE ON SCHEMA michis TO administrator;
--- GRANT SELECT ON ALL TABLES IN SCHEMA crw_public TO external_ia;
--- GRANT EXECUTE ON ALL functions IN SCHEMA crw_public TO external_ia;
--- ALTER DEFAULT PRIVILEGES IN SCHEMA crw_public GRANT SELECT ON TABLES TO external_ia;

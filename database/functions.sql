@@ -1,10 +1,4 @@
--- ToDo:
-
--- Registro
 -- Login
--- Recuperar contraseña
--- ???
-
 CREATE OR REPLACE FUNCTION michis.authenticate(email text, password text)
  RETURNS michis.jwt_token
  LANGUAGE plpgsql
@@ -14,12 +8,12 @@ declare
   the_user michis."user";
 begin
 
+  -- Se consulta al usuario del email.
   select u.* into the_user
     from michis."user" u
     where u.email = authenticate.email;
 
-    -- crypt(password, gen_salt('bf'))
-
+  -- Se comprueba que el password_hash, sí concuerde con el password enviado.
   if the_user.password_hash = crypt(password, the_user.password_hash) then
     return (
       the_user."user_type"::text,
@@ -27,30 +21,17 @@ begin
       (the_user."user_type" = 'administrator')
     )::michis.jwt_token;
   else
+    -- En caso que no, devuelve null
     return null;
   end if;
 end;
 $function$
 ;
-
+-- Permiso para que los usuarios externos (rol por defecto), sí puedan loguearse.
 GRANT EXECUTE ON FUNCTION michis.authenticate(text, text) TO user_external;
 
 
-create function michis.current_user_id() returns integer as $$
-  select nullif(current_setting('jwt.claims.user_id', true), '')::integer;
-$$ language sql stable;
-
-create function michis.current_user_role() returns text as $$
-  select nullif(current_setting('jwt.claims.role', true), '')::text;
-$$ language sql stable;
-
-
-
-
-
-
-
-
+-- Registro
 CREATE OR REPLACE FUNCTION michis.register(
   "name" varchar(50),
   last_name varchar(50),
@@ -65,8 +46,7 @@ AS $function$
 declare
   the_user michis."user";
 begin
-
-
+  -- Se inserta el usuario tal y como llegue, pero se delega la verificación a las reglas del DDL.
   INSERT INTO michis."user"("name", last_name, email, password_hash, "user_type", birth_day
   )VALUES(
     register."name",
@@ -77,7 +57,7 @@ begin
     register.birth_day
   ) RETURNING * INTO the_user;
 
-
+  -- Retorna el usuario nuevo.
   return the_user;
 end;
 $function$
