@@ -1,5 +1,15 @@
+-- Esta extensión es mejor desde el schema public
+create extension pgcrypto;
 
 CREATE SCHEMA IF NOT EXISTS michis;
+
+DROP ROLE IF EXISTS "administrator";
+DROP ROLE IF EXISTS "user_external";
+DROP ROLE IF EXISTS "user_unal";
+
+create role "administrator";
+create role "user_external";
+create role "user_unal";
 
 CREATE TYPE michis.donation_type AS ENUM (
   'money',
@@ -9,8 +19,10 @@ CREATE TYPE michis.donation_type AS ENUM (
 
 CREATE TYPE michis.user_type AS ENUM (
   'administrator',
-  'user'
+  'user_external',
+  'user_unal'
 );
+
 
 CREATE TYPE michis.health_state AS ENUM (
   'excellent',
@@ -60,21 +72,23 @@ CREATE TABLE michis."user" (
   "name" varchar(50) NOT NULL,
   last_name varchar(50) NOT NULL,
   email text NOT NULL,
-  "password" text NOT NULL,
+  "password_hash" text NOT NULL,
   "user_type" michis."user_type" NOT NULL,
   birth_day date NULL,
   is_active bool NOT NULL DEFAULT true,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NULL,
+  CONSTRAINT email_ck CHECK (email ~* '^[A-Za-z0-9._+%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$'),
   CONSTRAINT user_pk PRIMARY KEY (id),
-  CONSTRAINT email_ck CHECK (email ~* '^[A-Za-z0-9._+%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$')
+	CONSTRAINT user_un UNIQUE (email)
 );
 
 COMMENT ON COLUMN michis."user".id IS 'Primary key';
 COMMENT ON COLUMN michis."user"."name" IS 'User name';
 COMMENT ON COLUMN michis."user".last_name IS 'User last name';
 COMMENT ON COLUMN michis."user".email IS 'user email';
-COMMENT ON COLUMN michis."user"."password" IS 'user password stored using Bcrypt';
+COMMENT ON COLUMN michis."user"."password_hash" IS '@omit
+user password stored using Bcrypt';
 COMMENT ON COLUMN michis."user"."user_type" IS 'User type (admin or user)';
 COMMENT ON COLUMN michis."user".birth_day IS 'To calculate the current age';
 COMMENT ON COLUMN michis."user".is_active IS 'To know if this user can be active. False means banned';
@@ -127,3 +141,56 @@ CREATE TABLE michis.usercat_like (
 COMMENT ON COLUMN michis.usercat_like.user_id IS 'Foreign key to user';
 COMMENT ON COLUMN michis.usercat_like.cat_id IS 'Foreign key to cat';
 COMMENT ON COLUMN michis.usercat_like.ts IS 'Timestamptz when this like was made';
+
+-- DROP TYPE michis.jwt_token cascade;
+CREATE TYPE michis.jwt_token AS (
+  "role" text,
+  user_id int4,
+  is_admin bool
+);
+
+
+
+
+GRANT USAGE ON SCHEMA michis TO administrator;
+GRANT USAGE ON SCHEMA michis TO user_external;
+GRANT USAGE ON SCHEMA michis TO user_unal;
+
+GRANT INSERT, SELECT, UPDATE ON TABLE michis."user" TO user_unal;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE michis."user" TO administrator;
+
+GRANT SELECT ON TABLE michis."cat" TO user_unal;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE michis."cat" TO administrator;
+
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE michis.donation TO administrator;
+GRANT INSERT, SELECT ON TABLE michis.donation TO user_external;
+GRANT INSERT, SELECT ON TABLE michis.donation TO user_unal;
+
+GRANT SELECT, UPDATE ON TABLE michis.usercat_interest TO administrador;
+GRANT INSERT, SELECT, UPDATE ON TABLE michis.usercat_interest TO user_unal;
+
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE michis.usercat_like TO user_unal;
+GRANT SELECT ON TABLE michis.usercat_like TO user_external;
+GRANT SELECT, UPDATE, DELETE ON TABLE michis.usercat_like TO administrator;
+
+
+
+ALTER TABLE michis."user" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY own_user ON michis."user"
+  AS PERMISSIVE
+  FOR UPDATE
+  USING ((id = michis.current_user_id()))
+  WITH CHECK ((id = michis.current_user_id()));
+
+CREATE POLICY any_select_user ON michis."user"
+  AS PERMISSIVE
+  FOR SELECT
+  USING (true);
+
+
+
+-- GRANT USAGE ON SCHEMA michis TO administrator;
+-- GRANT SELECT ON ALL TABLES IN SCHEMA crw_public TO external_ia;
+-- GRANT EXECUTE ON ALL functions IN SCHEMA crw_public TO external_ia;
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA crw_public GRANT SELECT ON TABLES TO external_ia;

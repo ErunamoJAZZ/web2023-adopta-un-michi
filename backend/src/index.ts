@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app: Application = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 app.get('/', (req: Request, res: Response) => {
   res.send('This is a Postgraphile API. Use the /graphql endpoint to access.');
@@ -21,6 +21,12 @@ app.use(
       watchPg: true,
       graphiql: true,
       enhanceGraphiql: true,
+      pgDefaultRole: 'user_external',
+      jwtPgTypeIdentifier: 'michis.jwt_token',
+      jwtSecret: process.env.POSTGRAPHILE_JWT_SECRET,
+      jwtSignOptions: {
+        expiresIn: '7 days',
+      }
     }
   )
 );
