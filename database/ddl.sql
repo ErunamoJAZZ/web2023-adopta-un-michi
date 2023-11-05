@@ -1,3 +1,5 @@
+create database michis;
+
 -- Esta extensión es mejor desde el schema public
 create extension pgcrypto;
 
