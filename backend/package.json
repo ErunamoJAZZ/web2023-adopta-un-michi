@@ -2,24 +2,54 @@
   "name": "adopta-un-michi",
   "version": "0.1.0",
   "description": "Proyecto de Desarrollo Web 2023-2S, Grupo 5",
-  "contributors": [
-    { "name": "Carlos Daniel Sanchez" },
-    { "name": "Dioselin Esteban Brito" },
-    { "name": "Jonathan David Avendaño" },
-    { "name": "Javier De Jesús Silva" }
-  ],
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "homepage": "https://github.com/ErunamoJAZZ/web2023-adopta-un-michi#readme",
+  "bugs": {
+    "url": "https://github.com/ErunamoJAZZ/web2023-adopta-un-michi/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ErunamoJAZZ/web2023-adopta-un-michi.git"
   },
-  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ErunamoJAZZ/web2023-adopta-un-michi/issues"
+  "author": "",
+  "contributors": [
+    {
+      "name": "Carlos Daniel Sanchez"
+    },
+    {
+      "name": "Dioselin Esteban Brito"
+    },
+    {
+      "name": "Jonathan David Avendaño"
+    },
+    {
+      "name": "Javier De Jesús Silva"
+    }
+  ],
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev src/index.ts",
+    "start": "node build/src/server.js",
+    "build": "shx rm -rf build && tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "homepage": "https://github.com/ErunamoJAZZ/web2023-adopta-un-michi#readme"
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "pg": "^8.11.3",
+    "postgraphile": "^4.13.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.15",
+    "@types/express": "^4.17.20",
+    "@types/pg": "^8.10.7",
+    "shx": "^0.3.4",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
+  },
+  "engines": {
+    "node": "18"
+  }
 }
