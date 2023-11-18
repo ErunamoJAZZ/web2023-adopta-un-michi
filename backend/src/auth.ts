@@ -81,11 +81,17 @@ router.post('/reset/:token', async (req: Request, res: Response) =>
     WHERE michis.user.id = $2", [new_pass, user_id]);
     await pgPool.query("DELETE FROM michis.user_token WHERE user.token = $1", [token]);
   }
-  
-  // Because we didn't find an user with the provided token, we can assume the token was removed from the user token_table (expired)
-  // Or maybe it didn't even exist in the first place... (Brute forcing attack?, likely token has to be longer than 15 characters in order to avoid this.)
+
   else
     res.send('Reset link not valid any longer');
+
+  /* 
+    Because we didn't find an user with the provided token, we can assume the token 
+    was removed from the user token_table (expired)
+    Or maybe it didn't even exist in the first place... 
+    this case might arise from brute forcing attack attempt, it is likely that the token
+    has to be longer than 15 characters in order to avoid this.)
+  */
 });
   
 module.exports = router;
