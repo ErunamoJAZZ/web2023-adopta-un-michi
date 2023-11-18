@@ -145,6 +145,16 @@ COMMENT ON COLUMN michis.usercat_like.user_id IS 'Foreign key to user';
 COMMENT ON COLUMN michis.usercat_like.cat_id IS 'Foreign key to cat';
 COMMENT ON COLUMN michis.usercat_like.ts IS 'Timestamptz when this like was made';
 
+CREATE TABLE michis.user_token (
+    user_id INT PRIMARY KEY REFERENCES michis.user(id),
+    token VARCHAR(15),
+    expiration_date TIMESTAMP
+);
+
+COMMENT ON COLUMN michis.user_token.user_id IS 'Foreign key to user';
+COMMENT ON COLUMN michis.user_token.token IS 'Unique token used for password resetting';
+COMMENT ON COLUMN michis.user_token.expiration_date IS 'Expiration date for the token of the previous column';
+
 -- Type especial para el JWT de postgraphile.
 -- DROP TYPE michis.jwt_token cascade;
 CREATE TYPE michis.jwt_token AS (

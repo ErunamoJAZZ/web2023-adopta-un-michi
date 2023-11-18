@@ -4,7 +4,6 @@ import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
 const router = require("./auth");
-
 //For env File
 dotenv.config();
 
@@ -19,6 +18,8 @@ const pgPool = new Pool({
 
 const app: Application = express();
 const port = process.env.PORT || 3001;
+
+app.use(router);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('This is a Postgraphile API. Use the /graphql endpoint to access.');
@@ -48,7 +49,4 @@ app.listen(port, () => {
   console.log(`Server is Fire at http://localhost:${port}`);
 });
 
-module.exports = {
-  pgPool: pgPool,
-  proc_env: process.env
-}
+module.exports = pgPool;

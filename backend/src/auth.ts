@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { Pool } from 'pg';
+import { Pool, Query } from 'pg';
 import { Router } from 'express';
 import nodemailer from 'nodemailer'
 
@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport(
   {
     host: "aspmx.l.google.com",
     port: 25,
-    secure: true,
+    secure: false,
     auth: {
       user: `${process.env.SERVER_MAIL}`,
       pass: `${process.env.SERVER_MAILPASS}`
@@ -31,23 +31,33 @@ const router: Router = express.Router();
 
 router.post('/recovery', async (req: Request, res: Response) => 
 {
-
     const pgPool: Pool = require("./index");
     // Check if there's an entry (user) with the provided mail.
-    const result = await pgPool.query("SELECT email FROM michis.user WHERE email = $1 LIMIT 1", req.body.email);
+    const result = await pgPool.query("SELECT email FROM michis.user WHERE email = $1 LIMIT 1", [req.body.email]);
+    let info;
+
     if(result.rowCount === 1)
     {
       const reset_token = get_rand_token(15);
-      const info = await transporter.sendMail(
+
+      // Insert token
+      await pgPool.query(`INSERT INTO michis.user_token (user_id, token, expiration_date) \
+      VALUES ( \
+      (SELECT user_id FROM michis.user WHERE email = $1 LIMIT 1),\
+      $2, \
+      CURRENT_TIMESTAMP + INTERVAL '20 minutes');`, [req.body.email, reset_token]);
+
+      info = await transporter.sendMail(
         {
           from: `${process.env.SERVER_MAIL}`, // sender address
           to: `${req.body.email}`, // list of receivers
           subject: "Reset your password!", // Subject line
-          text: `This is your password reset link: http://localhost:3001/reset/${reset_token}`, // plain text body
-          html: "<b>Hello world?</b>", // html body
+          text: `TF is this field for?`, // plain text body
+          html: `This is your password reset link: http://localhost:3001/reset/${reset_token}`, // html body
         });
     }
-    
+
+    res.send(info?.accepted ?? '0');
   });
 
 router.post('/reset/:token', async (req: Request, res: Response) => 
@@ -57,11 +67,16 @@ router.post('/reset/:token', async (req: Request, res: Response) =>
 
   const pgPool: Pool = require("./index");
 
-  const verify_token = await pgPool.query("SELECT token FROM michis.user WHERE token = $2", [token]);
+  // First remove already expired tokens
+  await pgPool.query("DELETE FROM michis.user_token WHERE expiration_date <= CURRENT_TIMESTAMP;");
+  const verify_token = await pgPool.query("SELECT token FROM michis.user_token WHERE token = $2 LIMIT 1", [token]);
+
   if(verify_token.rowCount === 1)
   {
-    await pgPool.query("UPDATE michis.user SET password_hash = crypt($1, gen_salt('bf')) WHERE user.token = $2", [new_pass, token]);
-    await pgPool.query("UPDATE michis.user SET token = NULL WHERE user.token = $1", [token]);
+    await pgPool.query("UPDATE michis.user \
+    SET password_hash = crypt($1, gen_salt('bf'))\
+    WHERE michis.user.id = (SELECT user_id FROM michis.user_token WHERE token = $2 LIMIT 1)", [new_pass, token]);
+    await pgPool.query("DELETE FROM michis.user_token WHERE user.token = $1", [token]);
   }
 
 });
