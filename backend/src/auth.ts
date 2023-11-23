@@ -33,6 +33,8 @@ router.post('/recovery', async (req: Request, res: Response) =>
 {
     const pgPool: Pool = require("./index");
     // Check if there's an entry (user) with the provided mail.
+    console.log(req.headers); // Log request headers
+    console.log(req.body);    // Log request body
     const result = await pgPool.query("SELECT email FROM michis.user WHERE email = $1 LIMIT 1", [req.body.email]);
     let info;
 
@@ -54,24 +56,26 @@ router.post('/recovery', async (req: Request, res: Response) =>
           to: `${req.body.email}`, // list of receivers
           subject: "Reset your password!", // Subject line
           text: `TF is this field for?`, // plain text body
-          html: `This is your password reset link: http://localhost:3001/reset/${reset_token}`, // html body
+          html: `This is your password reset link: ${process.env.CLIENT_URL}/resetPassword/${reset_token}`, // html body
         });
     }
 
     // Reply with '0' to let client know that the email provided does NOT exist.
-    res.send(info?.accepted ?? '0');
+    res.status(200).json({resp: info?.accepted === undefined ? "Cuenta no registrada." : "Se ha enviado el correo de recuperacion."});
   });
 
+// password reset
 router.post('/reset/:token', async (req: Request, res: Response) => 
 {
+
   const new_pass  = req.body.password;
-  const token = req.params.token;
+  const token: string = req.params.token;
 
   const pgPool: Pool = require("./index");
 
   // First remove already expired tokens
   await pgPool.query("DELETE FROM michis.user_token WHERE expiration_date <= CURRENT_TIMESTAMP;");
-  const verify_token = await pgPool.query("SELECT user_id FROM michis.user_token WHERE token = $2 LIMIT 1", [token]);
+  const verify_token = await pgPool.query("SELECT user_id FROM michis.user_token WHERE token = $1 LIMIT 1", [token]);
 
   if(verify_token.rowCount === 1)
   {
@@ -80,10 +84,11 @@ router.post('/reset/:token', async (req: Request, res: Response) =>
     SET password_hash = crypt($1, gen_salt('bf'))\
     WHERE michis.user.id = $2", [new_pass, user_id]);
     await pgPool.query("DELETE FROM michis.user_token WHERE user.token = $1", [token]);
+    res.status(200).json({resp: "Password reset successfully"});
   }
 
   else
-    res.send('Reset link not valid any longer');
+    res.status(200).json({resp: "Reset token is not valid."});
 
   /* 
     Because we didn't find an user with the provided token, we can assume the token 
@@ -95,5 +100,3 @@ router.post('/reset/:token', async (req: Request, res: Response) =>
 });
   
 module.exports = router;
-
-// reset password

@@ -9,6 +9,7 @@ import {
   CssBaseline,
   Grid,
 } from '@mui/material';
+import Link from 'next/link';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -61,6 +62,7 @@ const Login = () => {
             Iniciar Sesión
           </Button>
         </form>
+        <Link href="/login/recoverPassword"> Recuperar contraseña </Link>
       </div>
     </Container>
   );

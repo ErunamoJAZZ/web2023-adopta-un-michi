@@ -10,9 +10,15 @@ import {
   CssBaseline,
 } from '@mui/material';
 
-const ResetPassword = () => {
+import { useRouter } from 'next/navigation';
+
+const ResetPassword = ({params}: { params: { token: string }}) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const router = useRouter();
+  const url = "http://localhost:3001";
+
+  const token = params.token;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,10 +29,29 @@ const ResetPassword = () => {
     }
 
     try {
-      // Agrega aquí la lógica para cambiar la contraseña del usuario
+      
+      const res = await fetch(
+        `${url}/reset/${token}`,
+        {
+          method: "POST",
+          mode: "cors",
+          credentials: "omit",
+          cache: "no-cache",
+          referrerPolicy: "origin",
+          headers:
+          {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({new_pass: password})
+        }
+      )
 
-      alert('Contraseña cambiada exitosamente');
-      // Redirige al usuario a la página de inicio de sesión u otra página
+      const json_res = await res.json();
+
+      alert(json_res.resp);
+      router.push('/login');
+
+
     } catch (error) {
       console.error('Error al cambiar la contraseña:', error);
       alert('Error al cambiar la contraseña');

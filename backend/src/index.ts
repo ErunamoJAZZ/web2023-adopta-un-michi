@@ -19,6 +19,14 @@ const pgPool = new Pool({
 const app: Application = express();
 const port = process.env.PORT || 3001;
 
+const cors = require('cors');
+
+app.use(cors({
+  origin: `${process.env.CLIENT_URL}`,
+  methods: 'POST',
+  credentials: false,
+}));
+app.use(express.json());
 app.use(router);
 
 app.get('/', (req: Request, res: Response) => {
