@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -11,6 +14,13 @@ import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
+import Modal from '@mui/material/Modal';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from '@mui/material/TextField';
 
 const cardActionsStyles = {
   display: 'flex',
@@ -46,6 +56,29 @@ const cardStyles = {
 
 };
 
+const modalStyles = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '35vh',
+  bgcolor: 'background.paper',
+  border: '2px solid #333',
+  boxShadow: 24,
+  p: 4,
+
+  '& .form': {
+    '& .question': {
+      marginTop: '10px',
+      display: 'flex',
+      flexDirection: 'column',
+      '& label': {
+        marginBottom: '10px',
+      },
+    },
+  },
+};
+
 interface MichiCardProps {
   name: string;
   description: string | null;
@@ -55,6 +88,7 @@ interface MichiCardProps {
   sex: string;
   health_state: string;
   is_available: boolean;
+  id: number;
 }
 
 export default function MichiCard({
@@ -66,7 +100,11 @@ export default function MichiCard({
   sex,
   health_state,
   is_available,
+  id,
 }: MichiCardProps) {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   return (
     <Card sx={cardStyles}>
       <CardMedia
@@ -110,10 +148,56 @@ export default function MichiCard({
           <FavoriteBorderIcon />
           Favorito
         </Button>
-        <Button size="small" disabled={!is_available}>
+        <Button size="small" disabled={!is_available} onClick={handleOpen}>
           <VolunteerActivismIcon color={is_available ? 'primary' : 'disabled'} />
-          {is_available ? 'Quiero adoptar' : 'No disponible' }
+          {is_available ? 'Quiero adoptar' : 'No disponible'}
         </Button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-adopt-form-cats"
+          aria-describedby="modal-adopt-form-cats"
+        >
+          <Box sx={modalStyles}>
+            <Typography id="adopt-form-cats" variant="h6" component="h2">
+              {`Formulario de adopción para ${name}`}
+            </Typography>
+            <FormControl className="form">
+              <Box className="question">
+                <FormLabel>
+                  ¿Has tenido gatos antes? ¿Actualmente tienes alguno?
+                  ¿Estás familiarizado con los cuidados necesarios para un gato?
+                </FormLabel>
+                <TextField label="¿Cuidados de gatos?" variant="outlined" />
+              </Box>
+              <Box className="question">
+                <FormLabel>
+                  ¿Tus ventanas están cerradas o protegidas para que el gato no escape?
+                </FormLabel>
+                <RadioGroup
+                  aria-labelledby="windows-protected"
+                  defaultValue="No"
+                  name="radio-buttons-group-windows-protected"
+                >
+                  <FormControlLabel value="Sí" control={<Radio />} label="Sí" />
+                  <FormControlLabel value="No" control={<Radio />} label="No" />
+                </RadioGroup>
+              </Box>
+              <Box className="question">
+                <FormLabel>
+                  ¿Tienes otros animales en casa? ¿Qué tipo y cuántos?
+                </FormLabel>
+                <TextField label="¿Animales en casa?" variant="outlined" />
+              </Box>
+              <Box className="question">
+                <FormLabel>
+                  ¿Por qué estás interesado en adoptar un gato?
+                </FormLabel>
+                <TextField label="¿Interés al adoptar?" variant="outlined" />
+              </Box>
+            </FormControl>
+          </Box>
+        </Modal>
       </CardActions>
     </Card>
   );

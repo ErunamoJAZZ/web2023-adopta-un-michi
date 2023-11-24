@@ -56,6 +56,7 @@ export default function Michis() {
                 sex={cat.sex}
                 health_state={cat.health_state}
                 is_available={cat.is_available}
+                id={cat.id}
               />
             </li>
           ))}
