@@ -1,15 +1,14 @@
-import express, { Request, Response } from 'express';
-import { Router } from 'express';
+import express, { Router, Request, Response } from 'express';
 import nodemailer from 'nodemailer'
-import pgPool from './index';
+import pgPool from './pg';
 
-function getRandToken(length: number) 
+function getRandToken(length: number)
 {
   let token = '';
 
   const token_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const characters_length = token_chars.length;
-  
+
   for(let idx: number = 0; idx < length; idx++)
     token += token_chars[Math.floor(Math.random()*characters_length)];
 
@@ -29,7 +28,7 @@ const transporter = nodemailer.createTransport(
 
 const router: Router = express.Router();
 
-router.post('/recovery', async (req: Request, res: Response) => 
+router.post('/recovery', async (req: Request, res: Response) =>
 {
     // Check if there's an entry (user) with the provided mail.
     console.log(req.headers); // Log request headers
@@ -64,7 +63,7 @@ router.post('/recovery', async (req: Request, res: Response) =>
   });
 
 // password reset
-router.post('/reset/:token', async (req: Request, res: Response) => 
+router.post('/reset/:token', async (req: Request, res: Response) =>
 {
 
   const new_pass  = req.body.password;
@@ -87,13 +86,13 @@ router.post('/reset/:token', async (req: Request, res: Response) =>
   else
     res.status(200).json({resp: "Reset token is not valid."});
 
-  /* 
-    Because we didn't find an user with the provided token, we can assume the token 
+  /*
+    Because we didn't find an user with the provided token, we can assume the token
     was removed from the user token_table (expired)
-    Or maybe it didn't even exist in the first place... 
+    Or maybe it didn't even exist in the first place...
     this case might arise from brute forcing attack attempt, it is likely that the token
     has to be longer than 15 characters in order to avoid this.)
   */
 });
-  
+
 export default router;

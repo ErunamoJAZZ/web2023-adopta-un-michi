@@ -1,19 +1,8 @@
-import express, { Express, Request, Response , Application, Router } from 'express';
+import express, { Request, Response , Application } from 'express';
 import { postgraphile } from 'postgraphile';
-import { Pool } from 'pg';
-import dotenv from 'dotenv';
+import pgPool from './pg';
 import router from './auth';
-//For env File
-dotenv.config();
 
-// To avoid RDS connection errors
-const pgPool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  application_name: 'michis_postgraphile',
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
 
 const app: Application = express();
 const port = process.env.PORT || 3001;
