@@ -76,6 +76,11 @@ const modalStyles = {
         marginBottom: '10px',
       },
     },
+    '& .buttons': {
+      marginTop: '20px',
+      display: 'flex',
+      justifyContent: 'space-around',
+    },
   },
 };
 
@@ -105,6 +110,12 @@ export default function MichiCard({
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const sendForm = (catId: number) => {
+    console.log(catId);
+    // TODO: Conectar con back
+  };
+
   return (
     <Card sx={cardStyles}>
       <CardMedia
@@ -194,6 +205,10 @@ export default function MichiCard({
                   ¿Por qué estás interesado en adoptar un gato?
                 </FormLabel>
                 <TextField label="¿Interés al adoptar?" variant="outlined" />
+              </Box>
+              <Box className="buttons">
+                <Button variant="contained" onClick={() => sendForm(id)}>Enviar</Button>
+                <Button variant="outlined" onClick={handleClose}>Cancelar</Button>
               </Box>
             </FormControl>
           </Box>
