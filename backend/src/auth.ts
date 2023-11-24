@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
-import { Pool, Query } from 'pg';
 import { Router } from 'express';
 import nodemailer from 'nodemailer'
+import pgPool from './index';
 
-function get_rand_token(length: number) 
+function getRandToken(length: number) 
 {
   let token = '';
 
@@ -31,7 +31,6 @@ const router: Router = express.Router();
 
 router.post('/recovery', async (req: Request, res: Response) => 
 {
-    const pgPool: Pool = require("./index");
     // Check if there's an entry (user) with the provided mail.
     console.log(req.headers); // Log request headers
     console.log(req.body);    // Log request body
@@ -41,7 +40,7 @@ router.post('/recovery', async (req: Request, res: Response) =>
     // If user found
     if(result.rowCount === 1)
     {
-      const reset_token = get_rand_token(15);
+      const reset_token = getRandToken(15);
 
       // Insert token
       await pgPool.query(`INSERT INTO michis.user_token (user_id, token, expiration_date) \
@@ -55,7 +54,7 @@ router.post('/recovery', async (req: Request, res: Response) =>
           from: `${process.env.SERVER_MAIL}`, // sender address
           to: `${req.body.email}`, // list of receivers
           subject: "Reset your password!", // Subject line
-          text: `TF is this field for?`, // plain text body
+          text: `This is your password reset link: ${process.env.CLIENT_URL}/resetPassword/${reset_token}`, // plain text body
           html: `This is your password reset link: ${process.env.CLIENT_URL}/resetPassword/${reset_token}`, // html body
         });
     }
@@ -70,8 +69,6 @@ router.post('/reset/:token', async (req: Request, res: Response) =>
 
   const new_pass  = req.body.password;
   const token: string = req.params.token;
-
-  const pgPool: Pool = require("./index");
 
   // First remove already expired tokens
   await pgPool.query("DELETE FROM michis.user_token WHERE expiration_date <= CURRENT_TIMESTAMP;");
@@ -99,4 +96,4 @@ router.post('/reset/:token', async (req: Request, res: Response) =>
   */
 });
   
-module.exports = router;
+export default router;

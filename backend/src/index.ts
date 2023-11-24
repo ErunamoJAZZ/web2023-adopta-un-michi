@@ -2,8 +2,7 @@ import express, { Express, Request, Response , Application, Router } from 'expre
 import { postgraphile } from 'postgraphile';
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
-
-const router = require("./auth");
+import router from './auth';
 //For env File
 dotenv.config();
 
@@ -57,4 +56,4 @@ app.listen(port, () => {
   console.log(`Server is Fire at http://localhost:${port}`);
 });
 
-module.exports = pgPool;
+export default pgPool;
