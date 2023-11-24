@@ -45,7 +45,7 @@ router.post('/recovery', async (req: Request, res: Response) =>
       // Insert token
       await pgPool.query(`INSERT INTO michis.user_token (user_id, token, expiration_date) \
       VALUES ( \
-      (SELECT user_id FROM michis.user WHERE email = $1 LIMIT 1),\
+      (SELECT id FROM michis.user WHERE email = $1 LIMIT 1),\
       $2, \
       CURRENT_TIMESTAMP + INTERVAL '20 minutes');`, [req.body.email, reset_token]);
 
