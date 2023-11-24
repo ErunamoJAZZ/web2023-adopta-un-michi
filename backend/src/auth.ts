@@ -53,8 +53,8 @@ router.post('/recovery', async (req: Request, res: Response) =>
           from: `${process.env.SERVER_MAIL}`, // sender address
           to: `${req.body.email}`, // list of receivers
           subject: "Reset your password!", // Subject line
-          text: `This is your password reset link: ${process.env.CLIENT_URL}/resetPassword/${reset_token}`, // plain text body
-          html: `This is your password reset link: ${process.env.CLIENT_URL}/resetPassword/${reset_token}`, // html body
+          text: `This is your password reset link: ${process.env.CLIENT_URL}/login/resetPassword/${reset_token}`, // plain text body
+          html: `This is your password reset link: ${process.env.CLIENT_URL}/login/resetPassword/${reset_token}`, // html body
         });
     }
 
@@ -66,7 +66,7 @@ router.post('/recovery', async (req: Request, res: Response) =>
 router.post('/reset/:token', async (req: Request, res: Response) =>
 {
 
-  const new_pass  = req.body.password;
+  const new_pass: string = req.body.new_pass;
   const token: string = req.params.token;
 
   // First remove already expired tokens
@@ -75,11 +75,12 @@ router.post('/reset/:token', async (req: Request, res: Response) =>
 
   if(verify_token.rowCount === 1)
   {
-    const user_id: String = verify_token.rows[0];
-    await pgPool.query("UPDATE michis.user \
+    const user_id = verify_token.rows[0].user_id;
+    await pgPool.query(`UPDATE michis.user \
     SET password_hash = crypt($1, gen_salt('bf'))\
-    WHERE michis.user.id = $2", [new_pass, user_id]);
-    await pgPool.query("DELETE FROM michis.user_token WHERE user.token = $1", [token]);
+    WHERE michis.user.id = $2`, [new_pass, user_id]);
+
+    await pgPool.query("DELETE FROM michis.user_token WHERE token = $1", [token]);
     res.status(200).json({resp: "Password reset successfully"});
   }
 
