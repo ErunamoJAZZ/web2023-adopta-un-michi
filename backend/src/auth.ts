@@ -46,7 +46,9 @@ router.post('/recovery', async (req: Request, res: Response) =>
       VALUES ( \
       (SELECT id FROM michis.user WHERE email = $1 LIMIT 1),\
       $2, \
-      CURRENT_TIMESTAMP + INTERVAL '20 minutes');`, [req.body.email, reset_token]);
+      CURRENT_TIMESTAMP + INTERVAL '20 minutes')
+      ON CONFLICT ON CONSTRAINT user_token_pkey do update
+      SET token = $2, expiration_date = now() + INTERVAL '20 minutes';`, [req.body.email, reset_token]);
 
       info = await transporter.sendMail(
         {
@@ -56,10 +58,12 @@ router.post('/recovery', async (req: Request, res: Response) =>
           text: `This is your password reset link: ${process.env.CLIENT_URL}/login/resetPassword/${reset_token}`, // plain text body
           html: `This is your password reset link: ${process.env.CLIENT_URL}/login/resetPassword/${reset_token}`, // html body
         });
+
+        res.status(200).json({resp: "Se ha enviado el correo de recuperacion."});
     }
 
-    // Reply with '0' to let client know that the email provided does NOT exist.
-    res.status(200).json({resp: info?.accepted === undefined ? "Cuenta no registrada." : "Se ha enviado el correo de recuperacion."});
+    else
+      res.status(400).json({resp: "Cuenta no registrada."});
   });
 
 // password reset
@@ -85,7 +89,7 @@ router.post('/reset/:token', async (req: Request, res: Response) =>
   }
 
   else
-    res.status(200).json({resp: "Reset token is not valid."});
+    res.status(401).json({resp: "Reset token is not valid."});
 
   /*
     Because we didn't find an user with the provided token, we can assume the token

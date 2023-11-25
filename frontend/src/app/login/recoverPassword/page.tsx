@@ -7,39 +7,40 @@ import {
   TextField,
   Button,
   CssBaseline,
-  Grid,
+  Alert,
 } from '@mui/material';
 
-const ForgotPassword = () => {
+function ForgotPassword() {
   const [email, setEmail] = useState('');
-  const url = "http://localhost:3001";
+  const [alertState, setAlertState] = useState(0);
+  const [infoStatus, setInfoStatus] = useState('');
+
+  const url = 'http://localhost:3001';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-
       const res = await fetch(`${url}/recovery`, {
-        method: "POST",
-        mode: "cors",
-        credentials: "omit",
-        cache: "no-cache",
-        referrerPolicy: "origin",
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'omit',
+        cache: 'no-cache',
+        referrerPolicy: 'origin',
         headers:
         {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({ email }),
       });
-      
-      
-      const jres = await res.json();
-      
-      alert(jres.resp);
-      // Redirige al usuario a la página de confirmación o a donde sea necesario
+
+      const jsonRes = await res.json() as { resp: string };
+
+      setInfoStatus(jsonRes.resp);
+
+      if (res.status === 200) { setAlertState(1); } else { throw new Error('User not found.'); }
     } catch (error) {
-      console.error('Error al enviar las instrucciones de recuperación de contraseña:', error);
-      alert('Error al enviar las instrucciones de recuperación de contraseña');
+      setAlertState(2);
     }
   };
 
@@ -48,6 +49,7 @@ const ForgotPassword = () => {
       <CssBaseline />
       <div>
         <Typography variant="h5">Recuperar contraseña</Typography>
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
@@ -66,10 +68,15 @@ const ForgotPassword = () => {
           >
             Recuperar
           </Button>
+          {alertState ? (
+            <Alert severity={alertState === 1 ? 'success' : 'error'}>
+              {infoStatus}
+            </Alert>
+          ) : null }
         </form>
       </div>
     </Container>
   );
-};
+}
 
 export default ForgotPassword;
