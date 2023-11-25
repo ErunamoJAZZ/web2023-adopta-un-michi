@@ -21,7 +21,6 @@ function ResetPassword({ params }: { params: { token: string } }) {
   const [badPasswordAlert, setBadPasswordAlert] = useState(0);
 
   const router = useRouter();
-  const url = 'http://localhost:3001';
 
   const { token } = params;
 
@@ -33,7 +32,7 @@ function ResetPassword({ params }: { params: { token: string } }) {
     } else {
       try {
         const res = await fetch(
-          `${url}/reset/${token}`,
+          `${process.env.SERVER_URL}/reset/${token}`,
           {
             method: 'POST',
             mode: 'cors',

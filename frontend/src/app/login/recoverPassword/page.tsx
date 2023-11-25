@@ -15,13 +15,11 @@ function ForgotPassword() {
   const [alertState, setAlertState] = useState(0);
   const [infoStatus, setInfoStatus] = useState('');
 
-  const url = 'http://localhost:3001';
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`${url}/recovery`, {
+      const res = await fetch(`${process.env.SERVER_URL}/recovery`, {
         method: 'POST',
         mode: 'cors',
         credentials: 'omit',
