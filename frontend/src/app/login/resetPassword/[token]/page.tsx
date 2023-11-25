@@ -30,32 +30,32 @@ function ResetPassword({ params }: { params: { token: string } }) {
 
     if (password !== confirmPassword) {
       setBadPasswordAlert(1);
-    }
-
-    try {
-      const res = await fetch(
-        `${url}/reset/${token}`,
-        {
-          method: 'POST',
-          mode: 'cors',
-          credentials: 'omit',
-          cache: 'no-cache',
-          referrerPolicy: 'origin',
-          headers:
+    } else {
+      try {
+        const res = await fetch(
+          `${url}/reset/${token}`,
+          {
+            method: 'POST',
+            mode: 'cors',
+            credentials: 'omit',
+            cache: 'no-cache',
+            referrerPolicy: 'origin',
+            headers:
           {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ new_pass: password }),
-        },
-      );
+            body: JSON.stringify({ new_pass: password }),
+          },
+        );
 
-      const jsonRes = await res.json() as { resp: string };
-      setInfoStatus(jsonRes.resp);
+        const jsonRes = await res.json() as { resp: string };
+        setInfoStatus(jsonRes.resp);
 
-      if (res.status === 200) { setAlertState(1); } else { throw new Error('Invalid token.'); }
-      router.push('/login');
-    } catch (error) {
-      setAlertState(2);
+        if (res.status === 200) { setAlertState(1); } else { throw new Error('Invalid token.'); }
+        router.push('/login');
+      } catch (error) {
+        setAlertState(2);
+      }
     }
   };
 
