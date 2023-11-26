@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React from 'react';
 import { Container, CircularProgress, Typography } from '@mui/material';

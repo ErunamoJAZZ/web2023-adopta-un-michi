@@ -62,3 +62,15 @@ begin
 end;
 $function$
 ;
+
+-- Función auxiliar
+CREATE OR REPLACE FUNCTION michis.current_user()
+ RETURNS michis."user"
+ LANGUAGE sql
+ STABLE
+AS $function$
+  select u.*
+    from michis."user" u
+    where u.id = michis.current_user_id();
+$function$
+;

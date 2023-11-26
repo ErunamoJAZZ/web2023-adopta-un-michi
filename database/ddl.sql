@@ -154,7 +154,7 @@ CREATE TABLE michis.user_token (
 COMMENT ON COLUMN michis.user_token.user_id IS 'Foreign key to user';
 COMMENT ON COLUMN michis.user_token.token IS 'Unique token used for password resetting';
 COMMENT ON COLUMN michis.user_token.expiration_date IS 'Expiration date for the token of the previous column';
-COMMENT ON COLUMN michis.user_token is E'@omit read';
+COMMENT ON TABLE michis.user_token is E'@omit read';
 
 -- Type especial para el JWT de postgraphile.
 -- DROP TYPE michis.jwt_token cascade;
