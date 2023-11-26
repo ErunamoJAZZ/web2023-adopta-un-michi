@@ -1,26 +1,29 @@
 'use client';
 
-import { useState } from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
+import {
+  Card,
+  CardMedia,
+  CardContent,
+  Box,
+  Typography,
+  Chip,
+  CardActions,
+  Button,
+  Modal,
+  FormControl,
+  FormLabel,
+  TextField,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+} from '@mui/material';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
-import Modal from '@mui/material/Modal';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import TextField from '@mui/material/TextField';
+import { useState } from 'react';
+
 
 const cardActionsStyles = {
   display: 'flex',
