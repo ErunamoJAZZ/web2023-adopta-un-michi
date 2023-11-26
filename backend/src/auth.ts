@@ -67,7 +67,8 @@ router.post('/recovery', async (req: Request, res: Response) =>
 router.post('/reset/:token', async (req: Request, res: Response) =>
 {
 
-  const {newPass, token} = req.body;
+  const newPass = req.body.new_pass;
+  const {token} = req.params;
 
   // First remove already expired tokens
   await pgPool.query("DELETE FROM michis.user_token WHERE expiration_date <= CURRENT_TIMESTAMP;");
