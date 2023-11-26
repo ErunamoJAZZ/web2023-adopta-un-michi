@@ -6,11 +6,11 @@ function getRandToken(length: number)
 {
   let token = '';
 
-  const token_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const characters_length = token_chars.length;
+  const tokenChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = tokenChars.length;
 
-  for(let idx: number = 0; idx < length; idx++)
-    token += token_chars[Math.floor(Math.random()*characters_length)];
+  for(let idx: number = 0; idx < length; idx+=1)
+    token += tokenChars[Math.floor(Math.random()*charactersLength)];
 
   return token;
 }
@@ -31,15 +31,12 @@ const router: Router = express.Router();
 router.post('/recovery', async (req: Request, res: Response) =>
 {
     // Check if there's an entry (user) with the provided mail.
-    console.log(req.headers); // Log request headers
-    console.log(req.body);    // Log request body
     const result = await pgPool.query("SELECT email FROM michis.user WHERE email = $1 LIMIT 1", [req.body.email]);
-    let info;
 
     // If user found
     if(result.rowCount === 1)
     {
-      const reset_token = getRandToken(15);
+      const resetToken = getRandToken(15);
 
       // Insert token
       await pgPool.query(`INSERT INTO michis.user_token (user_id, token, expiration_date) \
@@ -48,15 +45,15 @@ router.post('/recovery', async (req: Request, res: Response) =>
       $2, \
       CURRENT_TIMESTAMP + INTERVAL '20 minutes')
       ON CONFLICT ON CONSTRAINT user_token_pkey do update
-      SET token = $2, expiration_date = now() + INTERVAL '20 minutes';`, [req.body.email, reset_token]);
+      SET token = $2, expiration_date = now() + INTERVAL '20 minutes';`, [req.body.email, resetToken]);
 
-      info = await transporter.sendMail(
+      await transporter.sendMail(
         {
           from: `${process.env.SERVER_MAIL}`, // sender address
           to: `${req.body.email}`, // list of receivers
           subject: "Reset your password!", // Subject line
-          text: `This is your password reset link: ${process.env.CLIENT_URL}/login/resetPassword/${reset_token}`, // plain text body
-          html: `This is your password reset link: ${process.env.CLIENT_URL}/login/resetPassword/${reset_token}`, // html body
+          text: `This is your password reset link: ${process.env.CLIENT_URL}/login/resetPassword/${resetToken}`, // plain text body
+          html: `This is your password reset link: ${process.env.CLIENT_URL}/login/resetPassword/${resetToken}`, // html body
         });
 
         res.status(200).json({resp: "Se ha enviado el correo de recuperacion."});
@@ -70,19 +67,18 @@ router.post('/recovery', async (req: Request, res: Response) =>
 router.post('/reset/:token', async (req: Request, res: Response) =>
 {
 
-  const new_pass: string = req.body.new_pass;
-  const token: string = req.params.token;
+  const {newPass, token} = req.body;
 
   // First remove already expired tokens
   await pgPool.query("DELETE FROM michis.user_token WHERE expiration_date <= CURRENT_TIMESTAMP;");
-  const verify_token = await pgPool.query("SELECT user_id FROM michis.user_token WHERE token = $1 LIMIT 1", [token]);
+  const verifyToken = await pgPool.query("SELECT user_id FROM michis.user_token WHERE token = $1 LIMIT 1", [token]);
 
-  if(verify_token.rowCount === 1)
+  if(verifyToken.rowCount === 1)
   {
-    const user_id = verify_token.rows[0].user_id;
+    const userId = verifyToken.rows[0].user_id;
     await pgPool.query(`UPDATE michis.user \
     SET password_hash = crypt($1, gen_salt('bf'))\
-    WHERE michis.user.id = $2`, [new_pass, user_id]);
+    WHERE michis.user.id = $2`, [newPass, userId]);
 
     await pgPool.query("DELETE FROM michis.user_token WHERE token = $1", [token]);
     res.status(200).json({resp: "Password reset successfully"});
