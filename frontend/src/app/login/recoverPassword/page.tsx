@@ -33,7 +33,6 @@ function ForgotPassword() {
       });
 
       const jsonRes = await res.json() as { resp: string };
-
       setInfoStatus(jsonRes.resp);
 
       if (res.status === 200) { setAlertState(1); } else { throw new Error('User not found.'); }

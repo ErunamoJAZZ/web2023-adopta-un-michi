@@ -17,9 +17,9 @@ function getRandToken(length: number)
 
 const transporter = nodemailer.createTransport(
   {
-    host: "aspmx.l.google.com",
-    port: 25,
-    secure: false,
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
       user: `${process.env.SERVER_MAIL}`,
       pass: `${process.env.SERVER_MAILPASS}`

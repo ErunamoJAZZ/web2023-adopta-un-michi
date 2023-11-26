@@ -7,11 +7,10 @@ import {
   TextField,
   Button,
   CssBaseline,
-  Grid,
 } from '@mui/material';
 import Link from 'next/link';
 
-const Login = () => {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -19,13 +18,10 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      // Agrega aquí la lógica de autenticación
 
-      alert('Inicio de Sesión Exitoso');
       // Redirige al usuario a la página de inicio o a otra página
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      alert('Credenciales incorrectas');
+      // Credenciales incorrectas.
     }
   };
 
@@ -34,6 +30,7 @@ const Login = () => {
       <CssBaseline />
       <div>
         <Typography variant="h5">Iniciar Sesión</Typography>
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
@@ -66,6 +63,6 @@ const Login = () => {
       </div>
     </Container>
   );
-};
+}
 
 export default Login;
