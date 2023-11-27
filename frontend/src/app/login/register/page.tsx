@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { gql, useMutation } from '@apollo/client';
 import {
   Container,
   Typography,
@@ -8,25 +9,66 @@ import {
   Button,
   CssBaseline,
   Grid,
+  Alert,
+  AlertColor,
 } from '@mui/material';
 
-const Register = () => {
+import { useRouter } from 'next/navigation';
+
+const registerMutation = gql`
+mutation reg(
+  $name: String!
+  $lastname: String!
+  $email: String!
+  $password: String!
+  $birthday: Date!
+) {
+  register(
+    input: {
+      name: $name
+      lastName: $lastname
+      email: $email
+      password: $password
+      birthDay: $birthday
+    }
+  ) {
+    user {
+      id
+    }
+  }
+}
+`;
+
+function Register() {
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [alertState, setAlertState] = useState({ show: false, msg: 'Success.', state: 'success' as AlertColor });
+  const [doRegister] = useMutation(registerMutation);
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      // Agrega aquí la lógica para registrar al usuario
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const { data } = await doRegister({
+        variables: {
+          name,
+          lastname: lastName,
+          email,
+          password,
+          birthday: '1999-01-01',
+        },
+      });
 
-      alert('Registro exitoso');
-      // Redirige al usuario a la página de inicio de sesión u otra página
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (data.register.user.id) { setAlertState({ show: true, msg: 'Se ha registrado existosamente.', state: 'success' }); } else { throw new Error('Error'); }
+      setTimeout(() => router.push('/login'), 2500);
     } catch (error) {
-      console.error('Error al registrar:', error);
-      alert('Error al registrar');
+      setAlertState({ show: true, msg: 'Error en el registro.', state: 'error' });
     }
   };
 
@@ -35,6 +77,7 @@ const Register = () => {
       <CssBaseline />
       <div>
         <Typography variant="h5">Registro</Typography>
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -84,10 +127,15 @@ const Register = () => {
           >
             Registrarse
           </Button>
+          {alertState.show ? (
+            <Alert severity={alertState.state}>
+              {alertState.msg}
+            </Alert>
+          ) : null }
         </form>
       </div>
     </Container>
   );
-};
+}
 
 export default Register;

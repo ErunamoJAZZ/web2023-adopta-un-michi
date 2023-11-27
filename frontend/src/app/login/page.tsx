@@ -33,6 +33,7 @@ function Login() {
     e.preventDefault();
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { data } = await doLogin({
         variables: {
           email,
@@ -60,6 +61,7 @@ function Login() {
     } catch (error) {
       setAlertState({
         show: true,
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         msg: `Error: ${error}`,
       });
     }
@@ -107,6 +109,7 @@ function Login() {
         ) : null }
 
         <Link href="/login/recoverPassword"> Recuperar contraseña </Link>
+        <Link href="/login/register" style={{ float: 'right' }}> Registrarse </Link>
       </div>
     </Container>
   );
