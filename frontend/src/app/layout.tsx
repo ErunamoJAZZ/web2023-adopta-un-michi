@@ -2,7 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import ResponsiveAppBar from '../components/ResponsiveAppBar';
-import { ApolloWrapper } from '../apolloClient'
+import { ApolloWrapper } from '../apolloClient';
 
 const inter = Inter({ subsets: ['latin'] });
 

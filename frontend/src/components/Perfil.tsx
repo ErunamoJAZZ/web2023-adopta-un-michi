@@ -1,19 +1,24 @@
 'use client';
 
-import { useState, FunctionComponent as FC } from 'react';
+import { useState } from 'react';
 import {
-  Avatar, Button, TextField, Typography,
+  Avatar, Button, TextField,
 } from '@mui/material';
 
-import styles from './profile.style.module.css';
-
 export interface ProfileProps {
-  correo: string
-  nombre: string
+  name: string,
+  lastName: string
+  email: string
+  createdAt: Date
 }
 
-export const Perfil: FC<ProfileProps> = (profile_info: ProfileProps) => {
+function Perfil({
+  name, lastName, email, createdAt,
+}: ProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
+
+  const nameI = name[0].toUpperCase();
+  const lastNameI = lastName[0].toUpperCase();
 
   return (
     <div style={{ position: 'absolute', left: '42%', top: '15%' }}>
@@ -21,17 +26,16 @@ export const Perfil: FC<ProfileProps> = (profile_info: ProfileProps) => {
         sx={{
           width: 150, height: 150, fontSize: 40, textAlign: 'justify', left: '20%',
         }}
-        children={`${profile_info.nombre.split(' ')[0][0].toUpperCase()}
-            ${profile_info.nombre.split(' ')[1][0].toUpperCase()}`}
-      />
+      >
+        {`${nameI + lastNameI}`}
+      </Avatar>
       {isEditing ? (
         <>
           <div>
-            {
-                    (Object.keys(profile_info) as (keyof typeof profile_info)[]).map((key) => (
-                      <TextField size="small" fullWidth margin="normal" label={key} defaultValue={profile_info[key]} sx={{ display: 'block', padding: '5px' }} />
-                    ))
-                }
+            <TextField size="small" fullWidth margin="normal" label="Nombre" defaultValue={name} sx={{ display: 'block', padding: '5px' }} />
+            <TextField size="small" fullWidth margin="normal" label="Apellido" defaultValue={lastName} sx={{ display: 'block', padding: '5px' }} />
+            <TextField size="small" fullWidth margin="normal" label="Email" defaultValue={email} sx={{ display: 'block', padding: '5px' }} />
+            <TextField size="small" fullWidth margin="normal" label="Fecha de creacion" defaultValue={createdAt} sx={{ display: 'block', padding: '5px' }} />
           </div>
           <Button onClick={() => setIsEditing(false)}> Guardar </Button>
         </>
@@ -42,4 +46,6 @@ export const Perfil: FC<ProfileProps> = (profile_info: ProfileProps) => {
     </div>
 
   );
-};
+}
+
+export default Perfil;

@@ -1,7 +1,7 @@
 'use client';
 
 import { gql, useQuery } from '@apollo/client';
-import { Perfil, ProfileProps } from '../../components/Perfil';
+import Perfil, { ProfileProps } from '../../components/Perfil';
 
 const query = gql`
   query userPerfil {
@@ -15,17 +15,24 @@ const query = gql`
     }
   }`;
 
-export default function Home() {
-  const { loading, error, data } = useQuery(query);
+function Home() {
+  const { loading, data } = useQuery(query);
+  if (loading) { return (<h1> Loading... </h1>); }
 
-  const pinfo: ProfileProps = {
-    correo: 'testmail@mail.com',
-    nombre: 'Nombre de prueba',
-  };
+  const {
+    name, lastName, email, createdAt,
+  } = data.currentUser as ProfileProps;
 
   return (
     <main>
-      <Perfil {...pinfo} />
+      <Perfil
+        name={name}
+        lastName={lastName}
+        createdAt={new Date(createdAt)}
+        email={email}
+      />
     </main>
   );
 }
+
+export default Home;
