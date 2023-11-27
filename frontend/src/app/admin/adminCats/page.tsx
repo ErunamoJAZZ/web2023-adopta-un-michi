@@ -23,16 +23,19 @@ query adminCat {
     }
   }
 }`;
+// mutation addCat {
+//   createCat(
+//     input: {cat: {name: "Test", isAvailable: false, healthState: EXCELLENT, age: 1.5}}
+//   ){
+//     clientMutationId
+//   }
+// }
 
 const addCat = gql`
 mutation addCat($input: CatInput!) {
-  createCat(input: $input) {
+  createCat(input: {cat: $input}) {
     cat {
       id
-      name
-      age
-      healthState
-      isAvailable
     }
   }
 }`;
@@ -99,6 +102,7 @@ export default function AdminCats() {
   };
 
   const handleSaveNewCat = (newCat) => {
+    newCat.age = parseInt(newCat.age);
     doAddCat({ variables: { input: newCat } })
       .then(() => {
         refetch(); // Refrescar los datos
@@ -148,7 +152,7 @@ export default function AdminCats() {
       </p>
       {showAddCatForm && (
       <EditForm
-      initialData={{ name: '', age: '', healthState: '', isAvailable: false }}
+      initialData={{ name: '', age: 0, healthState: '', isAvailable: false}}
       open={showAddCatForm}
       onSave={handleSaveNewCat}
       onClose={() => setShowAddCatForm(false)}
